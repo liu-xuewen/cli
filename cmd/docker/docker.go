@@ -297,6 +297,9 @@ unix domain socket原理
 当不再需要这个Unix域套接字时，可以使用remove()函数或者unlink()函数将这个对应的文件删除。
 如果在文件系统中，已经有了一个文件和指定的路径名相同，则绑定会失败（返回错误EADDRINUSE）。
 所以，一个套接字只能绑定到一个路径上，同样的，一个路径也只能被一个套接字绑定。
+
+curl -s --unix-socket /var/run/docker.sock http:/containers/json
+curl -s --unix-socket /var/run/docker.sock http:/images/json
 */
 
 func main() {
