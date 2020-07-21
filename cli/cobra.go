@@ -17,6 +17,9 @@ import (
 
 // setupCommonRootCommand contains the setup common to
 // SetupRootCommand and SetupPluginRootCommand.
+/*
+setupCommonRootCommand包含SetupRootCommand和SetupPluginRootCommand通用的设置。
+*/
 func setupCommonRootCommand(rootCmd *cobra.Command) (*cliflags.ClientOptions, *pflag.FlagSet, *cobra.Command) {
 	opts := cliflags.NewClientOptions()
 	flags := rootCmd.Flags()
@@ -51,6 +54,9 @@ func setupCommonRootCommand(rootCmd *cobra.Command) (*cliflags.ClientOptions, *p
 
 // SetupRootCommand sets default usage, help, and error handling for the
 // root command.
+/*
+SetupRootCommand设置root命令的默认用法、帮助和错误处理。
+*/
 func SetupRootCommand(rootCmd *cobra.Command) (*cliflags.ClientOptions, *pflag.FlagSet, *cobra.Command) {
 	opts, flags, helpCmd := setupCommonRootCommand(rootCmd)
 
@@ -115,6 +121,10 @@ func (tcmd *TopLevelCommand) SetFlag(name, value string) {
 //
 // On success the caller is responsible for calling Initialize()
 // before calling `Execute` on the returned command.
+/*
+HandleGlobalFlags负责解析命令上定义的全局标志，它返回底层眼镜蛇命令和调用该命令时将使用的参数(或错误)。
+如果成功，调用方负责在对返回的命令调用`Execute`之前调用Initialize()。
+*/
 func (tcmd *TopLevelCommand) HandleGlobalFlags() (*cobra.Command, []string, error) {
 	cmd := tcmd.cmd
 

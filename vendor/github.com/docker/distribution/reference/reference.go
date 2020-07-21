@@ -186,6 +186,11 @@ func SplitHostname(named Named) (string, string) {
 // Parse parses s and returns a syntactically valid Reference.
 // If an error was encountered it is returned, along with a nil Reference.
 // NOTE: Parse will not handle short digests.
+/*
+Parse分析s并返回语法上有效的引用。
+如果遇到错误，则返回该错误以及一个空引用。
+注意：Parse不会处理短摘要。
+*/
 func Parse(s string) (Reference, error) {
 	matches := ReferenceRegexp.FindStringSubmatch(s)
 	if matches == nil {

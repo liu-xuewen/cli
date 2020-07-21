@@ -478,6 +478,10 @@ type ClientInfo struct {
 // NewDockerCli returns a DockerCli instance with all operators applied on it.
 // It applies by default the standard streams, and the content trust from
 // environment.
+/*
+NewDockerCli返回一个应用了所有运算符的DockerCli实例。
+默认情况下，它应用标准流和来自环境的内容信任。
+*/
 func NewDockerCli(ops ...DockerCliOption) (*DockerCli, error) {
 	cli := &DockerCli{}
 	defaultOps := []DockerCliOption{

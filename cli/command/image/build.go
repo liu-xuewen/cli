@@ -100,6 +100,7 @@ func newBuildOptions() buildOptions {
 }
 
 // NewBuildCommand creates a new `docker build` command
+// test: build -t runoob/ubuntu:v1 .
 func NewBuildCommand(dockerCli command.Cli) *cobra.Command {
 	options := newBuildOptions()
 
@@ -118,6 +119,11 @@ func NewBuildCommand(dockerCli command.Cli) *cobra.Command {
 	// We're doing it here so that we're only contacting the daemon when actually
 	// running the command, and not during initialization.
 	// TODO remove this hack once we no longer support the experimental use of --platform
+	/*
+	包装全局预运行以处理-platform标志的非BuildKit使用。
+	我们在这里这样做是为了仅在实际运行命令时联系守护进程，而不是在初始化期间。
+	一旦我们不再支持-platform的试验性使用，TODO将删除此攻击
+	*/
 	rootFn := cmd.Root().PersistentPreRunE
 	cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
 		if ok, _ := command.BuildKitEnabled(dockerCli.ServerInfo()); !ok {

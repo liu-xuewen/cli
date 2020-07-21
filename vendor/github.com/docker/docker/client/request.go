@@ -105,6 +105,14 @@ func (cli *Client) buildRequest(method, path string, body io.Reader, headers hea
 	return req, nil
 }
 
+/*
+unix domain socket原理
+在绑定一个Unix域套接字时，会在文件系统中的相应位置上创建一个文件，且这个文件的类型被标记为“Socket”，因此这个文件无法用open()函数打开。
+当不再需要这个Unix域套接字时，可以使用remove()函数或者unlink()函数将这个对应的文件删除。
+如果在文件系统中，已经有了一个文件和指定的路径名相同，则绑定会失败（返回错误EADDRINUSE）。
+所以，一个套接字只能绑定到一个路径上，同样的，一个路径也只能被一个套接字绑定。
+*/
+
 func (cli *Client) sendRequest(ctx context.Context, method, path string, query url.Values, body io.Reader, headers headers) (serverResponse, error) {
 	req, err := cli.buildRequest(method, cli.getAPIPath(ctx, path, query), body, headers)
 	if err != nil {
@@ -168,6 +176,11 @@ func (cli *Client) doRequest(ctx context.Context, req *http.Request) (serverResp
 		// Note we can't string compare "The system cannot find the file specified" as
 		// this is localised - for example in French the error would be
 		// `open //./pipe/docker_engine: Le fichier spécifié est introuvable.`
+		/*
+		尽管go-winio中没有强类型错误，但很多人在Windows上使用docker守护程序的默认配置，其中守护程序正在监听命名管道`/./Pipe/docker_engine，并且客户端必须以高权限运行。
+		为用户提供线索，而不是不太有用的消息，如`ERROR During CONNECT：GET http：/%！F(MISSING)%！F(MISSING).%！F(MISSING)PIPEL%！F(MISSING)docker_engine/v1.26/info：open/./Pipe/docker_engine：系统找不到指定的文件。
+		`注意：我们不能字符串比较“系统找不到指定的文件”，因为这是本地化的-例如，在法语中，错误将是`open/./Pipe./docker_engine：le fichier spécifiéest introuvable`。
+		*/
 		if strings.Contains(err.Error(), `open //./pipe/docker_engine`) {
 			// Checks if client is running with elevated privileges
 			if f, elevatedErr := os.Open("\\\\.\\PHYSICALDRIVE0"); elevatedErr == nil {

@@ -100,6 +100,7 @@ type Command struct {
 	// PersistentPreRun: children of this command will inherit and execute.
 	PersistentPreRun func(cmd *Command, args []string)
 	// PersistentPreRunE: PersistentPreRun but returns an error.
+	// 持续预运行
 	PersistentPreRunE func(cmd *Command, args []string) error
 	// PreRun: children of this command will not inherit.
 	PreRun func(cmd *Command, args []string)
@@ -144,6 +145,9 @@ type Command struct {
 	SuggestionsMinimumDistance int
 
 	// TraverseChildren parses flags on all parents before executing child command.
+	/*
+	TraverseChildren在执行子命令之前解析所有父级上的标志。 Traverse 导线/遍历
+	*/
 	TraverseChildren bool
 
 	// FParseErrWhitelist flag parse errors to be ignored
@@ -606,6 +610,10 @@ func isFlagArg(arg string) bool {
 
 // Find the target command given the args and command tree
 // Meant to be run on the highest node. Only searches down.
+/*
+在给定要在最高节点上运行的参数和命令树的情况下，查找目标命令。
+只向下搜索。
+*/
 func (c *Command) Find(args []string) (*Command, []string, error) {
 	var innerfind func(*Command, []string) (*Command, []string)
 
@@ -895,6 +903,7 @@ func (c *Command) ExecuteC() (cmd *Command, err error) {
 	}
 
 	// Regardless of what command execute is called on, run on Root only
+	// 什么时候会进入
 	if c.HasParent() {
 		return c.Root().ExecuteC()
 	}
@@ -914,8 +923,11 @@ func (c *Command) ExecuteC() (cmd *Command, err error) {
 	if c.args == nil && filepath.Base(os.Args[0]) != "cobra.test" {
 		args = os.Args[1:]
 	}
-
+	fmt.Printf("args3:%+v \n",args)
 	// initialize the hidden command to be used for bash completion
+	/*
+	初始化要用于bash完成的隐藏命令 todo
+	*/
 	c.initCompleteCmd(args)
 
 	var flags []string
@@ -1401,6 +1413,9 @@ func (c *Command) GlobalNormalizationFunc() func(f *flag.FlagSet, name string) f
 
 // Flags returns the complete FlagSet that applies
 // to this command (local and persistent declared here and by all parents).
+/*
+FLAGS返回应用于此命令的完整FlagSet(此处和所有父级声明的本地和持久性)。
+*/
 func (c *Command) Flags() *flag.FlagSet {
 	if c.flags == nil {
 		c.flags = flag.NewFlagSet(c.Name(), flag.ContinueOnError)

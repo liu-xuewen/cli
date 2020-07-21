@@ -74,6 +74,10 @@ func setFlagErrorFunc(dockerCli command.Cli, cmd *cobra.Command) {
 	// output if the feature is not supported.
 	// As above cli.SetupRootCommand(cmd) have already setup the FlagErrorFunc, we will add a pre-check before the FlagErrorFunc
 	// is called.
+	/*
+	在调用`docker栈-胡说八道`时，如果不支持，需要确保FlagErrorFunc返回合适的输出。
+	如上所述，cli.SetupRootCommand(Cmd)已经设置了FlagErrorFunc，我们将在调用FlagErrorFunc之前添加预检查。
+	*/
 	flagErrorFunc := cmd.FlagErrorFunc()
 	cmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
 		if err := pluginmanager.AddPluginCommandStubs(dockerCli, cmd.Root()); err != nil {
@@ -263,6 +267,8 @@ func runDocker(dockerCli *command.DockerCli) error {
 		return err
 	}
 
+	fmt.Printf("args:%+v \n",args)   			// 输出 args:[build -t runoob/ubuntu:v1 .]
+	fmt.Printf("os.Args:%+v \n",os.Args)		// 输出 os.Args:[/private/var/folders/5h/rdphnbkn4hjfdmlhdhlnwr0wp31pt2/T/___go_build_github_com_docker_cli_cmd_docker build -t runoob/ubuntu:v1 .]
 	if len(args) > 0 {
 		if _, _, err := cmd.Find(args); err != nil {
 			err := tryPluginRun(dockerCli, cmd, args[0])
@@ -272,14 +278,26 @@ func runDocker(dockerCli *command.DockerCli) error {
 			// For plugin not found we fall through to
 			// cmd.Execute() which deals with reporting
 			// "command not found" in a consistent way.
+			/*
+			对于插件未找到，我们使用cmd.Execute()，它以一致的方式处理报告“未找到命令”。
+			*/
 		}
 	}
 
 	// We've parsed global args already, so reset args to those
 	// which remain.
+	fmt.Printf("args2:%+v \n",args)  // 输出 args2:[build -t runoob/ubuntu:v1 .]
 	cmd.SetArgs(args)
 	return cmd.Execute()
 }
+
+/*
+unix domain socket原理
+在绑定一个Unix域套接字时，会在文件系统中的相应位置上创建一个文件，且这个文件的类型被标记为“Socket”，因此这个文件无法用open()函数打开。
+当不再需要这个Unix域套接字时，可以使用remove()函数或者unlink()函数将这个对应的文件删除。
+如果在文件系统中，已经有了一个文件和指定的路径名相同，则绑定会失败（返回错误EADDRINUSE）。
+所以，一个套接字只能绑定到一个路径上，同样的，一个路径也只能被一个套接字绑定。
+*/
 
 func main() {
 	dockerCli, err := command.NewDockerCli()
@@ -296,6 +314,9 @@ func main() {
 			}
 			// StatusError should only be used for errors, and all errors should
 			// have a non-zero exit status, so never exit with 0
+			/*
+			StatusError应该只用于错误，并且所有错误都应该具有非零的退出状态，因此永远不要以0退出
+			*/
 			if sterr.StatusCode == 0 {
 				os.Exit(1)
 			}

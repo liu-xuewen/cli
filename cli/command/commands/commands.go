@@ -40,6 +40,7 @@ func AddCommands(cmd *cobra.Command, dockerCli command.Cli) {
 
 		// image
 		image.NewImageCommand(dockerCli),
+		// image build
 		image.NewBuildCommand(dockerCli),
 
 		// builder
@@ -88,6 +89,9 @@ func AddCommands(cmd *cobra.Command, dockerCli command.Cli) {
 		context.NewContextCommand(dockerCli),
 
 		// legacy commands may be hidden
+		/*
+		旧版命令可能会被隐藏
+		*/
 		hide(system.NewEventsCommand(dockerCli)),
 		hide(system.NewInfoCommand(dockerCli)),
 		hide(system.NewInspectCommand(dockerCli)),

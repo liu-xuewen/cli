@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -82,8 +83,13 @@ func RequiresRangeArgs(min int, max int) cobra.PositionalArgs {
 }
 
 // ExactArgs returns an error if there is not the exact number of args
+/*
+如果没有确切的参数数量，则ExactArgs返回错误
+*/
 func ExactArgs(number int) cobra.PositionalArgs {
 	return func(cmd *cobra.Command, args []string) error {
+		// panic(111)
+		fmt.Printf("args:%+v \n",args)		// build -t runoob/ubuntu:v1 . //输出 args:[.]
 		if len(args) == number {
 			return nil
 		}

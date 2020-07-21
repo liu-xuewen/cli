@@ -17,3 +17,4 @@ cli/winresources/rsrc_amd64.syso
 coverage.txt
 profile.out
 /vndr.log
+.idea

@@ -30,7 +30,7 @@ func NewImagesCommand(dockerCli command.Cli) *cobra.Command {
 		Use:   "images [OPTIONS] [REPOSITORY[:TAG]]",
 		Short: "List images",
 		Args:  cli.RequiresMaxArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {   // if c.RunE != nil 的时候就直接执行，在execute中
 			if len(args) > 0 {
 				options.matchName = args[0]
 			}

@@ -490,6 +490,11 @@ func (f *FlagSet) Set(name, value string) error {
 // SetAnnotation allows one to set arbitrary annotations on a flag in the FlagSet.
 // This is sometimes used by spf13/cobra programs which want to generate additional
 // bash completion information.
+/*
+SetAnnotation允许用户在FlagSet中的标志上设置任意批注。
+这有时由spf13/cobra程序使用，它们想要生成额外的bash完成信息。
+作用是什么？？？
+*/
 func (f *FlagSet) SetAnnotation(name, key string, values []string) error {
 	normalName := f.normalizeFlagName(name)
 	flag, ok := f.formal[normalName]
@@ -1213,6 +1218,9 @@ var CommandLine = NewFlagSet(os.Args[0], ExitOnError)
 
 // NewFlagSet returns a new, empty flag set with the specified name,
 // error handling property and SortFlags set to true.
+/*
+NewFlagSet返回一个新的空标志集，该标志集的指定名称、错误处理属性和SortFlags设置为true。
+*/
 func NewFlagSet(name string, errorHandling ErrorHandling) *FlagSet {
 	f := &FlagSet{
 		name:          name,
